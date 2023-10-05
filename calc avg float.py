@@ -39,7 +39,7 @@ def read_text():
 
 
 def is_within_bounds(combination):
-    outcome = (difference * sum(combination) / 10) + float_caps[0]
+    outcome = (difference * get_ieee754(sum(combination) / 10)) + float_caps[0]
     return lower_bound < outcome < higher_bound
 
 
