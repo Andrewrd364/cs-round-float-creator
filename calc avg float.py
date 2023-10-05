@@ -1,7 +1,26 @@
 from itertools import combinations
+import struct
 
-lower_bound = 0.594594583
-higher_bound = 0.59459459
+
+def get_ieee754(value: float) -> float:
+    temp = struct.pack('!f', value)
+    result = struct.unpack('!f', temp)[0]
+    return result
+
+
+exp_float = 0.5
+float_caps = [0.06, 0.8]
+
+lower_bound = exp_float
+higher_bound = exp_float
+while get_ieee754(lower_bound) == exp_float:
+    lower_bound -= 0.000000000001
+lower_bound += 0.00000000001
+while get_ieee754(higher_bound) == exp_float:
+    higher_bound += 0.000000000001
+higher_bound -= 0.00000000001
+
+difference = float_caps[1] - float_caps[0]
 
 
 def read_text():
@@ -9,7 +28,7 @@ def read_text():
         filtered_text = []
         for i in file.readlines():
             if i.find("Float:") != -1:
-                filtered_text.append(round(float(i.replace("Float: ", "").replace("\n", "")), 9))
+                filtered_text.append(get_ieee754(float(i.replace("Float: ", "").replace("\n", ""))))
             if len(filtered_text) == 34:
                 break
 
@@ -20,8 +39,8 @@ def read_text():
 
 
 def is_within_bounds(combination):
-    avg = sum(combination) / 10
-    return lower_bound < avg < higher_bound
+    outcome = (difference * sum(combination) / 10) + float_caps[0]
+    return lower_bound < outcome < higher_bound
 
 
 def main():
@@ -29,8 +48,9 @@ def main():
 
     for combination in valid_combinations:
         avg = sum(combination) / 10
-        print(avg)
-        result_str = " or ".join([f'match(float, "{str(fv)[2:8]}")>=1' for fv in combination])
+        outcome = ((float_caps[1] - float_caps[0]) * avg) + float_caps[0]
+        print(outcome)
+        result_str = " or ".join([f'match(float, "{str(fv)[2:7]}")>=1' for fv in combination])
         print(result_str)
 
 
