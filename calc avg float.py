@@ -22,10 +22,10 @@ lower_bound = higher_bound = exp_float_in_caps
 
 while get_ieee754(lower_bound * difference + float_caps[0]) == exp_float:
     lower_bound -= 0.000000000001
-lower_bound += 0.00000001
+lower_bound += 0.000000015
 while get_ieee754(higher_bound * difference + float_caps[0]) == exp_float:
     higher_bound += 0.000000000001
-higher_bound -= 0.00000001
+higher_bound -= 0.000000015
 
 
 def read_text():
